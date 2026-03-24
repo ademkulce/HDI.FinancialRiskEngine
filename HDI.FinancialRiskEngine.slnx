@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="HDI.FinancialRiskEngine.Application/HDI.FinancialRiskEngine.Application.csproj" />
+  <Project Path="HDI.FinancialRiskEngine.Domain/HDI.FinancialRiskEngine.Domain.csproj" />
+  <Project Path="HDI.FinancialRiskEngine.Infrastructure/HDI.FinancialRiskEngine.Infrastructure.csproj" />
+  <Project Path="HDI.FinancialRiskEngine.Tests/HDI.FinancialRiskEngine.Tests.csproj" />
+  <Project Path="HDI.FinancialRiskEngine.WebApi/HDI.FinancialRiskEngine.WebApi.csproj" />
+  <Project Path="HDI.FinancialRiskEngine.WebUI/HDI.FinancialRiskEngine.WebUI.csproj" />
+</Solution>
