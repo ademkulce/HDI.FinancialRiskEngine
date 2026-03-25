@@ -1,4 +1,6 @@
 using HDI.FinancialRiskEngine.Infrastructure;
+using HDI.FinancialRiskEngine.WebApi;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
