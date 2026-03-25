@@ -40,6 +40,47 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Persistence.Configurations
                 .WithMany()
                 .HasForeignKey(x => x.TenantId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Risk analiz motorunun test edilebilmesi için örnek keyword verileri eklenir.
+            builder.HasData(
+                new AgreementKeyword
+                {
+                    Id = 1,
+                    TenantId = 1,
+                    AgreementId = 1,
+                    Keyword = "ceza",
+                    RiskScore = 20,
+                    Weight = 1.00m,
+                    IsActive = true,
+                    CreatedDate = new DateTime(2026, 03, 25, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false
+                },
+                new AgreementKeyword
+                {
+                    Id = 2,
+                    TenantId = 1,
+                    AgreementId = 1,
+                    Keyword = "iptal",
+                    RiskScore = 15,
+                    Weight = 1.00m,
+                    IsActive = true,
+                    CreatedDate = new DateTime(2026, 03, 25, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false
+                },
+                new AgreementKeyword
+                {
+                    Id = 3,
+                    TenantId = 1,
+                    AgreementId = 1,
+                    Keyword = "dava",
+                    RiskScore = 50,
+                    Weight = 1.00m,
+                    IsActive = true,
+                    CreatedDate = new DateTime(2026, 03, 25, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false
+                }
+            );
+
         }
     }
 }

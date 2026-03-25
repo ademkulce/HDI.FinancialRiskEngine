@@ -23,5 +23,18 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 
         builder.HasIndex(x => x.Code)
             .IsUnique();
+
+        // Uygulama ilk ayağa kalktığında örnek tenant verisi eklenir.
+        builder.HasData(
+            new Tenant
+            {
+                Id = 1,
+                Name = "HDI Default Tenant",
+                Code = "HDI",
+                IsActive = true,
+                CreatedDate = new DateTime(2026, 03, 25, 0, 0, 0, DateTimeKind.Utc),
+                IsDeleted = false
+            }
+        );
     }
 }

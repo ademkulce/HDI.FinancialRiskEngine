@@ -49,6 +49,24 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Persistence.Configurations
                 .WithMany(x => x.BusinessPartners)
                 .HasForeignKey(x => x.TenantId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Örnek iş ortağı kaydı eklenir. Konu oluşturma ve risk analizi testlerinde hazır veri sağlar.
+            builder.HasData(
+                new BusinessPartner
+                {
+                    Id = 1,
+                    TenantId = 1,
+                    AgreementId = 1,
+                    Name = "ABC Partner",
+                    Code = "PRT001",
+                    Email = "partner@test.com",
+                    Phone = "05551234567",
+                    ApiKey = "STATIC-SEED-API-KEY-001",
+                    IsActive = true,
+                    CreatedDate = new DateTime(2026, 03, 25, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false
+                }
+            );
         }
     }
 }

@@ -41,6 +41,25 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Persistence.Configurations
                 .WithMany(x => x.Agreements)
                 .HasForeignKey(x => x.TenantId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Örnek agreement kaydı eklenir bu sayede sistem ilk çalıştığında temel ilişki verileri hazır olur.
+            builder.HasData(
+                new Agreement
+                {
+                    Id = 1,
+                    TenantId = 1,
+                    Code = "AGR001",
+                    Name = "Genel Finansal Risk Sözleşmesi",
+                    Description = "Sistem başlangıcı için oluşturulmuş örnek agreement kaydı.",
+                    StartDate = new DateTime(2026, 01, 01),
+                    EndDate = new DateTime(2026, 12, 31),
+                    BaseRiskRate = 1.50m,
+                    IsActive = true,
+                    CreatedDate = new DateTime(2026, 03, 25, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false
+                }
+            );
+
         }
     }
 }
