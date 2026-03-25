@@ -1,5 +1,4 @@
 ﻿using HDI.FinancialRiskEngine.Application.Interfaces;
-using HDI.FinancialRiskEngine.Application.Interfaces.HDI.FinancialRiskEngine.Application.Interfaces;
 using HDI.FinancialRiskEngine.Infrastructure.Persistence;
 using HDI.FinancialRiskEngine.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;

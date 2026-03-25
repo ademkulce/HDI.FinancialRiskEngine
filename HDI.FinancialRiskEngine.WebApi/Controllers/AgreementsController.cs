@@ -1,7 +1,6 @@
 ﻿
 using HDI.FinancialRiskEngine.Application.DTOs.Agreements;
 using HDI.FinancialRiskEngine.Application.Interfaces;
-using HDI.FinancialRiskEngine.Application.Interfaces.HDI.FinancialRiskEngine.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HDI.FinancialRiskEngine.WebApi.Controllers

@@ -1,4 +1,6 @@
+using HDI.FinancialRiskEngine.Application.Interfaces;
 using HDI.FinancialRiskEngine.Infrastructure;
+using HDI.FinancialRiskEngine.Infrastructure.Services;
 using HDI.FinancialRiskEngine.WebApi;
 
 
@@ -14,7 +16,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// services.AddScoped<IAgreementService, AgreementService>();
+builder.Services.AddScoped<IAgreementService, AgreementService>();
 // services.AddScoped<IBusinessPartnerService, BusinessPartnerService>();
 // services.AddScoped<IBusinessTopicService, BusinessTopicService>();
 // services.AddScoped<IRiskAnalysisService, RiskAnalysisService>();

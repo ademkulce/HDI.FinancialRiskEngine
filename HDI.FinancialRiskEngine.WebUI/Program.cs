@@ -9,6 +9,8 @@ builder.Services.AddHttpClient<DashboardApiService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddHttpClient<AgreementApiService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

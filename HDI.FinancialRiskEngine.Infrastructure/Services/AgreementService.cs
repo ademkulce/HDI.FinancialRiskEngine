@@ -1,6 +1,5 @@
 ﻿using HDI.FinancialRiskEngine.Application.DTOs.Agreements;
 using HDI.FinancialRiskEngine.Application.Interfaces;
-using HDI.FinancialRiskEngine.Application.Interfaces.HDI.FinancialRiskEngine.Application.Interfaces;
 using HDI.FinancialRiskEngine.Domain.Entities;
 using HDI.FinancialRiskEngine.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
