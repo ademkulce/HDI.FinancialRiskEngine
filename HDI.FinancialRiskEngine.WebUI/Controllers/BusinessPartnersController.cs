@@ -66,8 +66,6 @@ namespace HDI.FinancialRiskEngine.WebUI.Controllers
                     Text = $"{x.Code} - {x.Name}",
                     Value = x.Id.ToString()
                 }).ToList();
-
-                return View(dto);
             }
                 
             var created = await _businessPartnerApiService.CreateAsync(dto);
@@ -83,8 +81,6 @@ namespace HDI.FinancialRiskEngine.WebUI.Controllers
                     Text = $"{x.Code} - {x.Name}",
                     Value = x.Id.ToString()
                 }).ToList();
-
-                return View(dto);
             }
 
             return RedirectToAction(nameof(Index));

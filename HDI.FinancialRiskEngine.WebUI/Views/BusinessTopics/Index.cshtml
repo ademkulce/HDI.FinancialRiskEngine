@@ -1,0 +1,78 @@
+﻿@model List<HDI.FinancialRiskEngine.Application.DTOs.BusinessTopics.BusinessTopicListDto>
+
+@{
+    ViewData["Title"] = "Business Topics";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>İş Konuları</h2>
+        <a href="/BusinessTopics/Create" class="btn btn-primary">Yeni İş Konusu</a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Başlık</th>
+                                <th>Referans No</th>
+                                <th>Tarih</th>
+                                <th>Durum</th>
+                                <th>Risk Tutarı</th>
+                                <th>Agreement Id</th>
+                                <th>Partner Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Title</td>
+                                    <td>@item.ReferenceNumber</td>
+                                    <td>@item.TopicDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>
+                                        @if (item.Status.ToString() == "Pending")
+                                        {
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        }
+                                        else if (item.Status.ToString() == "Analyzed")
+                                        {
+                                            <span class="badge bg-info text-dark">Analyzed</span>
+                                        }
+                                        else if (item.Status.ToString() == "Completed")
+                                        {
+                                            <span class="badge bg-success">Completed</span>
+                                        }
+                                        else if (item.Status.ToString() == "Rejected")
+                                        {
+                                            <span class="badge bg-danger">Rejected</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@item.Status</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @(item.CalculatedRiskAmount.HasValue ? item.CalculatedRiskAmount.Value.ToString("N2") : "-")
+                                    </td>
+                                    <td>@item.AgreementId</td>
+                                    <td>@item.BusinessPartnerId</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    Henüz iş konusu kaydı bulunmuyor.
+                </div>
+            }
+        </div>
+    </div>
+</div>

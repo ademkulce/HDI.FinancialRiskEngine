@@ -63,7 +63,7 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Services
         public async Task<int> CreateAsync(CreateBusinessTopicDto dto)
         {
             // İlgili tenant altında agreement gerçekten var mı kontrol edilir.
-            var agreementExists = await _context.Agreements.AnyAsync(x => x.Id == dto.AgreementId && x.TenantId == dto.TenantId && !x.IsActive && x.IsDeleted);
+            var agreementExists = await _context.Agreements.AnyAsync(x => x.Id == dto.AgreementId && x.TenantId == dto.TenantId && x.IsActive && !x.IsDeleted);
 
             if (!agreementExists) {
 
