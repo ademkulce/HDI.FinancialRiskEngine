@@ -12,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<AgreementApiService>();
 builder.Services.AddHttpClient<BusinessPartnerApiService>();
 builder.Services.AddHttpClient<BusinessTopicApiService>();
+builder.Services.AddHttpClient<RiskAnalysisApiService>();
 
 var app = builder.Build();
 

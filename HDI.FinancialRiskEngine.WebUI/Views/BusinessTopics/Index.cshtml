@@ -25,6 +25,7 @@
                                 <th>Risk Tutarı</th>
                                 <th>Agreement Id</th>
                                 <th>Partner Id</th>
+                                <th>İşlem</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,10 +58,21 @@
                                         }
                                     </td>
                                     <td>
-                                        @(item.CalculatedRiskAmount.HasValue ? item.CalculatedRiskAmount.Value.ToString("N2") : "-")
+                                        @(item.CalculatedRiskAmount.HasValue? item.CalculatedRiskAmount.Value.ToString("N2") : "-")
                                     </td>
                                     <td>@item.AgreementId</td>
                                     <td>@item.BusinessPartnerId</td>
+                                    <td>
+                                        @if (item.Status.ToString() == "Pending")
+                                        {
+                                            <form action="/BusinessTopics/Analyze" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-warning">
+                                                    Analiz Et
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>

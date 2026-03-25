@@ -1,5 +1,6 @@
 ﻿
 using HDI.FinancialRiskEngine.Application.DTOs.BusinessTopics;
+using HDI.FinancialRiskEngine.Application.DTOs.RiskAnalyses;
 using HDI.FinancialRiskEngine.WebUI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,12 +12,14 @@ namespace HDI.FinancialRiskEngine.WebUI.Controllers
         private readonly BusinessTopicApiService _businessTopicApiService;
         private readonly BusinessPartnerApiService _businessPartnerApiService;
         private readonly AgreementApiService _agreementApiService;
+        private readonly RiskAnalysisApiService _riskAnalysisApiService;
 
-        public BusinessTopicsController(BusinessTopicApiService businessTopicApiService, BusinessPartnerApiService businessPartnerApiService, AgreementApiService agreementApiService)
+        public BusinessTopicsController(BusinessTopicApiService businessTopicApiService, BusinessPartnerApiService businessPartnerApiService, AgreementApiService agreementApiService, RiskAnalysisApiService riskAnalysisApiService)
         {
             _businessTopicApiService = businessTopicApiService;
             _businessPartnerApiService = businessPartnerApiService;
             _agreementApiService = agreementApiService;
+            _riskAnalysisApiService = riskAnalysisApiService;
         }
 
         /// <summary>
@@ -86,6 +89,27 @@ namespace HDI.FinancialRiskEngine.WebUI.Controllers
                 Text = $"{x.Code} - {x.Name}",
                 Value = x.Id.ToString()
             }).ToList();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Analyze(int id)
+        {
+            int tenantId = 1;
+
+            var dto = new CreateRiskAnalysisDto
+            {
+                TenantId = tenantId,
+                BusinessTopicId = id
+            };
+
+            var result = await _riskAnalysisApiService.CreateAsync(dto);
+
+            if (!result)
+            {
+                TempData["Error"] = "Analiz yapılırken hata oluştu.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
