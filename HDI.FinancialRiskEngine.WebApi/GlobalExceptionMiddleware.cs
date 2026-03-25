@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using HDI.FinancialRiskEngine.Application.Exceptions;
+using System.Net;
 using System.Text.Json;
 
 namespace HDI.FinancialRiskEngine.WebApi
@@ -27,16 +28,42 @@ namespace HDI.FinancialRiskEngine.WebApi
         }
 
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
-        { 
+        {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-            var response = new {success = false,  message = exception.Message, statusCode = context.Response.StatusCode };
+            int statusCode;
+            string message;
 
-            var jsonResponse = JsonSerializer.Serialize(response);
+            switch (exception)
+            {
+                case NotFoundException:
+                    statusCode = (int)HttpStatusCode.NotFound;
+                    message = exception.Message;
+                    break;
 
-            await context.Response.WriteAsync(jsonResponse);
+                case BusinessException:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
 
+                default:
+                    statusCode = (int)HttpStatusCode.InternalServerError;
+                    message = "Beklenmeyen bir hata oluştu.";
+                    break;
+            }
+
+            context.Response.StatusCode = statusCode;
+
+            var response = new
+            {
+                success = false,
+                message = message,
+                statusCode = statusCode
+            };
+
+            var json = JsonSerializer.Serialize(response);
+
+            await context.Response.WriteAsync(json);
         }
     }
 }

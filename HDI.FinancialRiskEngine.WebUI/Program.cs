@@ -1,4 +1,10 @@
+using HDI.FinancialRiskEngine.WebUI.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
+builder.Services.AddHttpClient<DashboardApiService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

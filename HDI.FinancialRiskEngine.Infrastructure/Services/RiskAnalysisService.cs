@@ -1,5 +1,6 @@
 ﻿
 using HDI.FinancialRiskEngine.Application.DTOs.RiskAnalyses;
+using HDI.FinancialRiskEngine.Application.Exceptions;
 using HDI.FinancialRiskEngine.Application.Interfaces;
 using HDI.FinancialRiskEngine.Domain.Entities;
 using HDI.FinancialRiskEngine.Domain.Enums;
@@ -49,13 +50,13 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Services
             var existingAnalysis = await _context.RiskAnalyses.AnyAsync(x => x.BusinessTopicId == dto.BusinessTopicId && x.TenantId == dto.TenantId);
 
             if (existingAnalysis)
-                throw new Exception("Bu iş konusu için zaten bir risk analizi oluşturulmuş.");
+                throw new BusinessException("Bu iş konusu için zaten bir risk analizi oluşturulmuş.");
 
             // İlgili agreement kaydı çekilir.
             var agreement = await _context.Agreements.FirstOrDefaultAsync(x => x.Id == topic.AgreementId && x.TenantId == dto.TenantId && !x.IsDeleted && x.IsActive);
 
             if (agreement is null)
-                throw new Exception("İş konusu kaydına bağlı anlaşma bulunamadı.");
+                throw new NotFoundException("İş konusu kaydına bağlı anlaşma bulunamadı.");
 
             // Agreement'a bağlı aktif anahtar kelimeler çekilir.
             var keywords = await _context.AgreementKeywords.Where(x => x.AgreementId == topic.AgreementId && x.TenantId == dto.TenantId  && x.IsActive && !x.IsDeleted).ToListAsync();
