@@ -39,26 +39,33 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Services
 
         public async Task<RiskAnalysisDto> CreateAsync(CreateRiskAnalysisDto dto)
         {
-            // İş konusunu çekiyoruz
-            var topic = await _context.BusinessTopics.FirstOrDefaultAsync(x => x.Id == dto.BusinessTopicId
-                                          && x.TenantId == dto.TenantId
-                                          && !x.IsDeleted);
+            // İş konusu gerçekten var mı ve tenant altında mı kontrol edilir.
+            var topic = await _context.BusinessTopics.FirstOrDefaultAsync(x => x.Id == dto.BusinessTopicId && x.TenantId == dto.TenantId && !x.IsDeleted);
 
             if (topic is null)
-                throw new Exception("BusinessTopic bulunamadı.");
+                throw new Exception("İŞ KONUSU bulunamadı.");
 
-            // Anlaşmaya bağlı keyword’leri çekiyoruz
-            var keywords = await _context.AgreementKeywords.Where(x => x.AgreementId == topic.AgreementId
-                            && x.TenantId == dto.TenantId
-                            && x.IsActive).ToListAsync();
+            // Aynı iş konusu için daha önce analiz oluşturulmuş mu kontrol edilir.
+            var existingAnalysis = await _context.RiskAnalyses.AnyAsync(x => x.BusinessTopicId == dto.BusinessTopicId && x.TenantId == dto.TenantId);
 
-            // Risk hesaplama
+            if (existingAnalysis)
+                throw new Exception("Bu iş konusu için zaten bir risk analizi oluşturulmuş.");
+
+            // İlgili agreement kaydı çekilir.
+            var agreement = await _context.Agreements.FirstOrDefaultAsync(x => x.Id == topic.AgreementId && x.TenantId == dto.TenantId && !x.IsDeleted && x.IsActive);
+
+            if (agreement is null)
+                throw new Exception("İş konusu kaydına bağlı anlaşma bulunamadı.");
+
+            // Agreement'a bağlı aktif anahtar kelimeler çekilir.
+            var keywords = await _context.AgreementKeywords.Where(x => x.AgreementId == topic.AgreementId && x.TenantId == dto.TenantId  && x.IsActive && !x.IsDeleted).ToListAsync();
+
+            // Basit keyword eşleşme mantığı ile toplam risk skoru hesaplanır.
             int totalScore = 0;
             List<string> matchedKeywords = new();
 
             foreach (var keyword in keywords)
             {
-                // Basit string arama (case-insensitive)
                 if (topic.Description.Contains(keyword.Keyword, StringComparison.OrdinalIgnoreCase))
                 {
                     totalScore += keyword.RiskScore;
@@ -66,7 +73,7 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Services
                 }
             }
 
-            // Risk seviyesini belirleme
+            // Toplam puana göre risk seviyesi belirlenir.
             var riskLevel = totalScore switch
             {
                 <= 20 => RiskLevel.Low,
@@ -75,17 +82,15 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Services
                 _ => RiskLevel.Critical
             };
 
-            // Anlaşmanın base risk oranını alıyoruz
-            var agreement = await _context.Agreements.FirstAsync(x => x.Id == topic.AgreementId);
-
+            // Finansal risk tutarı hesaplanır.
             decimal riskAmount = totalScore * agreement.BaseRiskRate;
 
-            // Analiz kaydı oluşturuluyor
+            // Analiz kaydı oluşturulur.
             var analysis = new RiskAnalysis
             {
                 TenantId = dto.TenantId,
                 BusinessTopicId = dto.BusinessTopicId,
-                MatchedKeywords = string.Join(",", matchedKeywords),
+                MatchedKeywords = matchedKeywords.Count > 0 ? string.Join(",", matchedKeywords) : null,
                 RiskScore = totalScore,
                 RiskAmount = riskAmount,
                 RiskLevel = riskLevel,
@@ -95,7 +100,7 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Services
 
             await _context.RiskAnalyses.AddAsync(analysis);
 
-            // BusinessTopic güncelleniyor
+            // Ana iş konusu kaydı analiz sonucuna göre güncellenir.
             topic.CalculatedRiskAmount = riskAmount;
             topic.Status = BusinessTopicStatus.Analyzed;
 

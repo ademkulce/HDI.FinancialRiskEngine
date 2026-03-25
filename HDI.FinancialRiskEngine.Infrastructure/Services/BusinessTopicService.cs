@@ -62,6 +62,38 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Services
 
         public async Task<int> CreateAsync(CreateBusinessTopicDto dto)
         {
+            // İlgili tenant altında agreement gerçekten var mı kontrol edilir.
+            var agreementExists = await _context.Agreements.AnyAsync(x => x.Id == dto.AgreementId && x.TenantId == dto.TenantId && !x.IsActive && x.IsDeleted);
+
+            if (!agreementExists) {
+
+                throw new InvalidOperationException("Belirtilen AgreementId geçerli değil. Anlaşma aktif ve silinmemiş olmalıdır.");
+            }
+
+            var partnerExists = await _context.BusinessPartners.FirstOrDefaultAsync(x => x.Id == dto.BusinessPartnerId && x.TenantId == dto.TenantId && !x.IsDeleted && x.IsActive);
+
+            if (partnerExists is null)
+            {
+                throw new InvalidOperationException("Belirtilen BusinessPartnerId geçerli değil. İş ortağı aktif ve silinmemiş olmalıdır.");
+            }
+
+            // Partner ile agreement eşleşiyor mu kontrol edilir.Böylece farklı agreement'a bağlı partner ile topic açılması engellenir.
+            if (partnerExists.AgreementId != dto.AgreementId)
+            {
+                throw new InvalidOperationException("Seçilen iş ortağı, belirtilen anlaşma ile eşleşmiyor. ");
+            }
+
+            // Aynı tenant altında aynı reference number ile tekrar kayıt açılmasını engellemek istersek  burada kontrol edebiliriz. Şimdilik reference number doluysa kontrol yapıyoruz.
+            if (!string.IsNullOrWhiteSpace(dto.ReferenceNumber))
+            {
+                var referenceExists = await _context.BusinessTopics.AnyAsync(x => x.TenantId == dto.TenantId && x.ReferenceNumber == dto.ReferenceNumber && !x.IsDeleted);
+
+                if (referenceExists)
+                {
+                    throw new Exception("Aynı referans numarası ile daha önce kayıt oluşturulmuş.");
+                }
+            }
+
             // Yeni gelen iş konusu ilk aşamada Pending statüsünde oluşturulur.
             // Risk tutarı bu aşamada kullanıcıdan alınmaz; sonradan analiz motoru hesaplar.
             var businessTopic = new BusinessTopic
