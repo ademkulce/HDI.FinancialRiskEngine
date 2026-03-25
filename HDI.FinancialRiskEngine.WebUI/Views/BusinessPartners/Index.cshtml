@@ -1,0 +1,62 @@
+﻿@model List<HDI.FinancialRiskEngine.Application.DTOs.BusinessPartners.BusinessPartnerListDto>
+
+@{
+    ViewData["Title"] = "Business Partners";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>İş Ortakları</h2>
+        <a href="/BusinessPartners/Create" class="btn btn-primary">Yeni İş Ortağı</a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Ad</th>
+                                <th>Kod</th>
+                                <th>Email</th>
+                                <th>Telefon</th>
+                                <th>Anlaşma Id</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.Code</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Phone</td>
+                                    <td>@item.AgreementId</td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">Aktif</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Pasif</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    Henüz iş ortağı kaydı bulunmuyor.
+                </div>
+            }
+        </div>
+    </div>
+</div>

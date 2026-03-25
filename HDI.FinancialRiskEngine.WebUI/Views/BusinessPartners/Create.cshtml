@@ -1,0 +1,56 @@
+﻿@model HDI.FinancialRiskEngine.Application.DTOs.BusinessPartners.CreateBusinessPartnerDto
+
+@{
+    ViewData["Title"] = "Yeni İş Ortağı";
+}
+
+<div class="container mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="mb-4">Yeni İş Ortağı</h2>
+
+                <form action="/BusinessPartners/Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" asp-for="TenantId" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Ad</label>
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Kod</label>
+                        <input asp-for="Code" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Telefon</label>
+                        <input asp-for="Phone" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Anlaşma</label>
+                        <select asp-for="AgreementId" class="form-select" asp-items="ViewBag.Agreements">
+                            <option value="">Seçiniz</option>
+                        </select>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input asp-for="IsActive" class="form-check-input" />
+                        <label class="form-check-label">Aktif</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                    <a href="/BusinessPartners/Index" class="btn btn-secondary">Geri</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -10,6 +10,7 @@ builder.Services.AddHttpClient<DashboardApiService>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient<AgreementApiService>();
+builder.Services.AddHttpClient<BusinessPartnerApiService>();
 
 var app = builder.Build();
 
