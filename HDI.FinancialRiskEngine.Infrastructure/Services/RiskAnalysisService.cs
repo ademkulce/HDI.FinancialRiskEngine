@@ -61,17 +61,30 @@ namespace HDI.FinancialRiskEngine.Infrastructure.Services
             // Agreement'a bağlı aktif anahtar kelimeler çekilir.
             var keywords = await _context.AgreementKeywords.Where(x => x.AgreementId == topic.AgreementId && x.TenantId == dto.TenantId  && x.IsActive && !x.IsDeleted).ToListAsync();
 
+            if (!keywords.Any())
+            {
+                throw new BusinessException("Bu anlaşma için tanımlı aktif anahtar kelime bulunamadı.");
+            }
+
             // Basit keyword eşleşme mantığı ile toplam risk skoru hesaplanır.
             int totalScore = 0;
             List<string> matchedKeywords = new();
 
             foreach (var keyword in keywords)
             {
-                if (topic.Description.Contains(keyword.Keyword, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(topic.Description) &&
+                    topic.Description.Contains(keyword.Keyword, StringComparison.OrdinalIgnoreCase))
                 {
-                    totalScore += keyword.RiskScore;
-                    matchedKeywords.Add(keyword.Keyword);
+                    var keywordScore = (int)(keyword.RiskScore * keyword.Weight);
+
+                    totalScore += keywordScore;
+                    matchedKeywords.Add($"{keyword.Keyword} ({keywordScore})");
                 }
+            }
+
+            if (totalScore == 0)
+            {
+                throw new BusinessException("İş konusu açıklamasında eşleşen anahtar kelime bulunamadığı için risk skoru 0 hesaplandı.");
             }
 
             // Toplam puana göre risk seviyesi belirlenir.

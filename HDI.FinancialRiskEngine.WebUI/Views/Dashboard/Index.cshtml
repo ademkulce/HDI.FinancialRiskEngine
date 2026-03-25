@@ -112,3 +112,56 @@
         </div>
     </div>
 </div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Risk Seviyesi Dağılımı</h5>
+                <canvas id="riskChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('riskChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Low', 'Medium', 'High', 'Critical'],
+                datasets: [{
+                    label: 'Risk Adedi',
+                    data: [
+                        @Model.LowRiskCount,
+                        @Model.MediumRiskCount,
+                        @Model.HighRiskCount,
+                        @Model.CriticalRiskCount
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

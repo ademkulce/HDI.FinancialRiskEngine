@@ -55,6 +55,12 @@ namespace HDI.FinancialRiskEngine.WebUI.Services
                 dashboard.TotalBusinessTopics = topics.Count;
                 dashboard.TotalAnalyzedTopics = topics.Count(x => x.Status.ToString() == "Analyzed");
 
+             
+                dashboard.LowRiskCount = topics.Count(x => x.CalculatedRiskAmount.HasValue && x.CalculatedRiskAmount.Value > 0 && x.CalculatedRiskAmount.Value <= 30);
+                dashboard.MediumRiskCount = topics.Count(x => x.CalculatedRiskAmount.HasValue && x.CalculatedRiskAmount.Value > 30 && x.CalculatedRiskAmount.Value <= 75);
+                dashboard.HighRiskCount = topics.Count(x => x.CalculatedRiskAmount.HasValue && x.CalculatedRiskAmount.Value > 75 && x.CalculatedRiskAmount.Value <= 150);
+                dashboard.CriticalRiskCount = topics.Count(x => x.CalculatedRiskAmount.HasValue && x.CalculatedRiskAmount.Value > 150);
+
                 // Son 5 iş konusunu dashboard'da göstermek için hazırlıyoruz.
                 dashboard.RecentBusinessTopics = topics
                     .OrderByDescending(x => x.TopicDate)
