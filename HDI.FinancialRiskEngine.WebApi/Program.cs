@@ -8,18 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(builder.Configuration);
-
-builder.Services.AddScoped<IAgreementService, AgreementService>();
-// services.AddScoped<IBusinessPartnerService, BusinessPartnerService>();
-// services.AddScoped<IBusinessTopicService, BusinessTopicService>();
-// services.AddScoped<IRiskAnalysisService, RiskAnalysisService>();
 
 var app = builder.Build();
 
